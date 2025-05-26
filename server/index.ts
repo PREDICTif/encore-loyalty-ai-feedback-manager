@@ -65,5 +65,7 @@ app.use((req, res, next) => {
     reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
+    log(`🚀 Application running at: http://localhost:${port}`);
+    log(`📱 Click the link above to open the app`);
   });
 })();
