@@ -4,6 +4,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import FactsEditor from "@/components/facts-editor";
 import ResponseGenerator from "@/components/response-generator";
+import ProfileLoader from "@/components/profile-loader";
 import { FactConfiguration } from "@/lib/types";
 import { Bot } from "lucide-react";
 
@@ -118,6 +119,10 @@ export default function FeedbackManager() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           {/* Facts Editor - Left Side (3 columns) */}
           <div className="lg:col-span-3">
+            <ProfileLoader 
+              configuration={configuration}
+              onConfigurationChange={handleConfigurationChange}
+            />
             <FactsEditor 
               configuration={configuration}
               onConfigurationChange={handleConfigurationChange}

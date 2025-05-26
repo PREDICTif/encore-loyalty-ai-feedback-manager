@@ -1,0 +1,13 @@
+{
+  "name": "Mike Rodriguez",
+  "gender": "M",
+  "history": "Recent",
+  "meal": "Lunch",
+  "todoFacts": [
+    "Student at nearby university",
+    "Orders through mobile app",
+    "Usually gets extra spicy sauce",
+    "Often orders during study breaks",
+    "Uses loyalty points frequently"
+  ]
+}

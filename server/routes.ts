@@ -4,6 +4,8 @@ import { storage } from "./storage";
 import { insertFactConfigurationSchema, insertFeedbackResponseSchema } from "@shared/schema";
 import OpenAI from "openai";
 import multer from "multer";
+import fs from "fs/promises";
+import path from "path";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -226,6 +228,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error sending email:", error);
       res.status(500).json({ message: "Failed to send email" });
+    }
+  });
+
+  // Get available restaurant profiles
+  app.get("/api/restaurant-profiles", async (req, res) => {
+    try {
+      const profilesDir = path.join(process.cwd(), 'data', 'restaurant-profiles');
+      const files = await fs.readdir(profilesDir);
+      const profiles = [];
+      
+      for (const file of files) {
+        if (file.endsWith('.json')) {
+          const data = await fs.readFile(path.join(profilesDir, file), 'utf-8');
+          const profile = JSON.parse(data);
+          profiles.push({
+            id: file.replace('.json', ''),
+            name: profile.name,
+            type: profile.type,
+            ...profile
+          });
+        }
+      }
+      
+      res.json(profiles);
+    } catch (error) {
+      console.error("Error loading restaurant profiles:", error);
+      res.status(500).json({ message: "Failed to load restaurant profiles" });
+    }
+  });
+
+  // Get customer profiles for a restaurant
+  app.get("/api/customer-profiles/:restaurantId", async (req, res) => {
+    try {
+      const { restaurantId } = req.params;
+      const profilesDir = path.join(process.cwd(), 'data', 'customer-profiles', restaurantId);
+      
+      try {
+        const files = await fs.readdir(profilesDir);
+        const profiles = [];
+        
+        for (const file of files) {
+          if (file.endsWith('.json')) {
+            const data = await fs.readFile(path.join(profilesDir, file), 'utf-8');
+            const profile = JSON.parse(data);
+            profiles.push({
+              id: file.replace('.json', ''),
+              ...profile
+            });
+          }
+        }
+        
+        res.json(profiles);
+      } catch (dirError) {
+        // Directory doesn't exist, return empty array
+        res.json([]);
+      }
+    } catch (error) {
+      console.error("Error loading customer profiles:", error);
+      res.status(500).json({ message: "Failed to load customer profiles" });
+    }
+  });
+
+  // Load restaurant profile
+  app.post("/api/load-restaurant-profile", async (req, res) => {
+    try {
+      const { profileId } = req.body;
+      const profilePath = path.join(process.cwd(), 'data', 'restaurant-profiles', `${profileId}.json`);
+      
+      const data = await fs.readFile(profilePath, 'utf-8');
+      const restaurantProfile = JSON.parse(data);
+      
+      res.json(restaurantProfile);
+    } catch (error) {
+      console.error("Error loading restaurant profile:", error);
+      res.status(404).json({ message: "Restaurant profile not found" });
+    }
+  });
+
+  // Load customer profile
+  app.post("/api/load-customer-profile", async (req, res) => {
+    try {
+      const { restaurantId, profileId } = req.body;
+      const profilePath = path.join(process.cwd(), 'data', 'customer-profiles', restaurantId, `${profileId}.json`);
+      
+      const data = await fs.readFile(profilePath, 'utf-8');
+      const customerProfile = JSON.parse(data);
+      
+      res.json(customerProfile);
+    } catch (error) {
+      console.error("Error loading customer profile:", error);
+      res.status(404).json({ message: "Customer profile not found" });
     }
   });
 
