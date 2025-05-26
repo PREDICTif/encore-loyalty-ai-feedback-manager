@@ -184,48 +184,7 @@ export default function ResponseGenerator({ configuration }: ResponseGeneratorPr
           AI Response Generation
         </h2>
 
-        {/* Customer Feedback Input */}
-        <div className="mb-6">
-          <Label className="block text-sm font-medium text-slate-700 mb-2">
-            Customer Feedback Screenshot/Extracted Text
-          </Label>
-          <Textarea
-            value={feedbackText}
-            onChange={(e) => setFeedbackText(e.target.value)}
-            placeholder="Paste customer feedback text here or upload screenshot below..."
-            className="h-32 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
 
-        {/* File Upload Area */}
-        <div className="mb-6">
-          <Label className="block text-sm font-medium text-slate-700 mb-2">
-            Customer Feedback Screenshot (Optional)
-          </Label>
-          <div className="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileUpload}
-              className="hidden"
-              id="file-upload"
-            />
-            <label htmlFor="file-upload" className="cursor-pointer">
-              <CloudUpload className="mx-auto text-2xl text-slate-400 mb-2" size={32} />
-              <p className="text-sm text-slate-600">Click to upload or drag and drop</p>
-              <p className="text-xs text-slate-400">PNG, JPG up to 10MB</p>
-            </label>
-            {selectedFile && (
-              <p className="text-sm text-blue-600 mt-2">Selected: {selectedFile.name}</p>
-            )}
-            {analyzeImageMutation.isPending && (
-              <div className="flex items-center justify-center mt-2">
-                <Loader2 className="animate-spin mr-2" size={16} />
-                <span className="text-sm text-slate-600">Analyzing image...</span>
-              </div>
-            )}
-          </div>
-        </div>
 
         {/* Generate Button */}
         <Button
