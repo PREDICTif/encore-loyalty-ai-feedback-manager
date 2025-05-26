@@ -39,12 +39,12 @@ export default function ProfileLoader({ configuration, onConfigurationChange }: 
   const { toast } = useToast();
 
   // Fetch restaurant profiles
-  const { data: restaurantProfiles = [] } = useQuery<RestaurantProfile[]>({
+  const { data: restaurantProfiles = [], isLoading: loadingRestaurants } = useQuery<RestaurantProfile[]>({
     queryKey: ["/api/restaurant-profiles"],
   });
 
   // Fetch customer profiles for current restaurant
-  const { data: customerProfiles = [] } = useQuery<CustomerProfile[]>({
+  const { data: customerProfiles = [], isLoading: loadingCustomers } = useQuery<CustomerProfile[]>({
     queryKey: ["/api/customer-profiles", currentRestaurantId],
     enabled: !!currentRestaurantId,
   });
@@ -135,14 +135,18 @@ export default function ProfileLoader({ configuration, onConfigurationChange }: 
           <div className="flex gap-2">
             <Select value={selectedRestaurantProfile} onValueChange={setSelectedRestaurantProfile}>
               <SelectTrigger className="flex-1">
-                <SelectValue placeholder="Select restaurant profile..." />
+                <SelectValue placeholder={loadingRestaurants ? "Loading..." : "Select restaurant profile..."} />
               </SelectTrigger>
               <SelectContent>
-                {restaurantProfiles.map((profile) => (
-                  <SelectItem key={profile.id} value={profile.id}>
-                    {profile.name} ({profile.type})
-                  </SelectItem>
-                ))}
+                {restaurantProfiles.length > 0 ? (
+                  restaurantProfiles.map((profile) => (
+                    <SelectItem key={profile.id} value={profile.id}>
+                      {profile.name} ({profile.type})
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="none" disabled>No profiles available</SelectItem>
+                )}
               </SelectContent>
             </Select>
             <Button
@@ -171,14 +175,18 @@ export default function ProfileLoader({ configuration, onConfigurationChange }: 
           <div className="flex gap-2">
             <Select value={selectedCustomerProfile} onValueChange={setSelectedCustomerProfile}>
               <SelectTrigger className="flex-1">
-                <SelectValue placeholder="Select customer profile..." />
+                <SelectValue placeholder={loadingCustomers ? "Loading..." : "Select customer profile..."} />
               </SelectTrigger>
               <SelectContent>
-                {customerProfiles.map((profile) => (
-                  <SelectItem key={profile.id} value={profile.id}>
-                    {profile.name} ({profile.history} customer)
-                  </SelectItem>
-                ))}
+                {customerProfiles.length > 0 ? (
+                  customerProfiles.map((profile) => (
+                    <SelectItem key={profile.id} value={profile.id}>
+                      {profile.name} ({profile.history} customer)
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="none" disabled>No profiles available</SelectItem>
+                )}
               </SelectContent>
             </Select>
             <Button
@@ -199,10 +207,13 @@ export default function ProfileLoader({ configuration, onConfigurationChange }: 
         <div className="pt-3 border-t border-slate-200">
           <div className="text-sm text-slate-600 space-y-1">
             <div>
-              <span className="font-medium">Current Restaurant:</span> {configuration.restaurantFacts.name}
+              <span className="font-medium">Current Restaurant:</span> {configuration.restaurantFacts.name} ({configuration.restaurantFacts.type})
             </div>
             <div>
-              <span className="font-medium">Current Customer:</span> {configuration.customerFacts.name}
+              <span className="font-medium">Current Customer:</span> {configuration.customerFacts.name} ({configuration.customerFacts.history} customer)
+            </div>
+            <div>
+              <span className="font-medium">Restaurant ID:</span> {currentRestaurantId}
             </div>
           </div>
         </div>
