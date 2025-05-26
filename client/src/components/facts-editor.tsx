@@ -60,7 +60,7 @@ export default function FactsEditor({
   const [openSections, setOpenSections] = useState({
     restaurant: true,
     customer: true,
-    system: true,
+    system: false,
   });
 
   // Local state for text inputs to prevent aggressive callbacks
@@ -213,14 +213,14 @@ export default function FactsEditor({
             <CollapsibleTrigger asChild>
               <Button
                 variant="ghost"
-                className="w-full justify-between px-4 py-3 bg-slate-50 rounded-t-lg border border-slate-200 hover:bg-slate-100"
+                className="w-full justify-between px-4 py-3 bg-blue-600 text-white rounded-t-lg border border-blue-600 hover:bg-blue-700 transition-colors"
               >
-                <span className="font-medium text-slate-700 flex items-center">
-                  <Utensils className="text-blue-500 mr-2" size={16} />
+                <span className="font-medium flex items-center">
+                  <Utensils className="mr-2" size={16} />
                   Restaurant Specific Facts
                 </span>
                 <ChevronDown
-                  className={`text-slate-400 transition-transform ${
+                  className={`transition-transform ${
                     openSections.restaurant ? "rotate-180" : ""
                   }`}
                   size={16}
@@ -404,14 +404,14 @@ export default function FactsEditor({
             <CollapsibleTrigger asChild>
               <Button
                 variant="ghost"
-                className="w-full justify-between px-4 py-3 bg-slate-50 rounded-t-lg border border-slate-200 hover:bg-slate-100"
+                className="w-full justify-between px-4 py-3 bg-blue-600 text-white rounded-t-lg border border-blue-600 hover:bg-blue-700 transition-colors"
               >
-                <span className="font-medium text-slate-700 flex items-center">
-                  <User className="text-indigo-500 mr-2" size={16} />
+                <span className="font-medium flex items-center">
+                  <User className="mr-2" size={16} />
                   Customer Specific Facts
                 </span>
                 <ChevronDown
-                  className={`text-slate-400 transition-transform ${
+                  className={`transition-transform ${
                     openSections.customer ? "rotate-180" : ""
                   }`}
                   size={16}
@@ -623,14 +623,14 @@ export default function FactsEditor({
             <CollapsibleTrigger asChild>
               <Button
                 variant="ghost"
-                className="w-full justify-between px-4 py-3 bg-slate-50 rounded-t-lg border border-slate-200 hover:bg-slate-100"
+                className="w-full justify-between px-4 py-3 bg-blue-600 text-white rounded-t-lg border border-blue-600 hover:bg-blue-700 transition-colors"
               >
-                <span className="font-medium text-slate-700 flex items-center">
-                  <Settings className="text-emerald-500 mr-2" size={16} />
+                <span className="font-medium flex items-center">
+                  <Settings className="mr-2" size={16} />
                   System Facts & Settings
                 </span>
                 <ChevronDown
-                  className={`text-slate-400 transition-transform ${
+                  className={`transition-transform ${
                     openSections.system ? "rotate-180" : ""
                   }`}
                   size={16}
