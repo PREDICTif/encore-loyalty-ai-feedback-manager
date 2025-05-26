@@ -48,7 +48,7 @@ A React-based AI-powered feedback response system for restaurants that generates
    ```
 
 5. **Access the application**
-   Open your browser and navigate to `http://localhost:6000`
+   Open your browser and navigate to `http://localhost:3000`
 
 ## Project Structure
 
