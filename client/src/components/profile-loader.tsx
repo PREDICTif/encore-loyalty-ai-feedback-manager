@@ -46,6 +46,7 @@ export default function ProfileLoader({ configuration, onConfigurationChange }: 
   // Fetch customer profiles for current restaurant
   const { data: customerProfiles = [], isLoading: loadingCustomers } = useQuery<CustomerProfile[]>({
     queryKey: ["/api/customer-profiles", currentRestaurantId],
+    queryFn: () => fetch(`/api/customer-profiles/${currentRestaurantId}`).then(res => res.json()),
     enabled: !!currentRestaurantId,
   });
 
