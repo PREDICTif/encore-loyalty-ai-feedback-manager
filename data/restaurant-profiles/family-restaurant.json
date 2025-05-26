@@ -1,0 +1,14 @@
+{
+  "name": "Family Table Restaurant",
+  "address": "321 Maple Street, Suburban Plaza",
+  "url": "https://familytablerestaurant.com",
+  "type": "Casual",
+  "brandTone": "Friendly",
+  "todoFacts": [
+    "Kids eat free on Sundays",
+    "Large portions perfect for sharing",
+    "Birthday party packages available",
+    "Playground area for children",
+    "Senior citizen discounts"
+  ]
+}

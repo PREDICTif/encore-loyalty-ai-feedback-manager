@@ -1,0 +1,14 @@
+{
+  "name": "Le Jardin Noir",
+  "address": "456 Oak Avenue, Downtown",
+  "url": "https://lejardinnoir.com",
+  "type": "Fine-dining",
+  "brandTone": "Professional",
+  "todoFacts": [
+    "Michelin-starred restaurant",
+    "Chef's tasting menu available",
+    "Extensive wine cellar with 500+ selections",
+    "Private dining rooms for special occasions",
+    "Dress code enforced"
+  ]
+}

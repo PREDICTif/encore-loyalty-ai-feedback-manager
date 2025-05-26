@@ -1,0 +1,14 @@
+{
+  "name": "Quick Bites Express",
+  "address": "789 Shopping Center, Mall Road",
+  "url": "https://quickbitesexpress.com",
+  "type": "Fast-food",
+  "brandTone": "Casual",
+  "todoFacts": [
+    "15-minute delivery guarantee",
+    "Mobile app ordering with loyalty points",
+    "Fresh ingredients sourced daily",
+    "Student discount available",
+    "Open 24/7"
+  ]
+}

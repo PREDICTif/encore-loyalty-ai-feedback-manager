@@ -1,0 +1,12 @@
+{
+  "name": "John Doe",
+  "gender": "M",
+  "history": "Long-time",
+  "meal": "Dinner",
+  "todoFacts": [
+    "Prefers window seating",
+    "Usually orders vegetarian dishes",
+    "Celebrates anniversary here annually",
+    "Allergic to shellfish"
+  ]
+}

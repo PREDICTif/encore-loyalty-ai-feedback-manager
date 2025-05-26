@@ -1,0 +1,13 @@
+{
+  "name": "Sample Bistro",
+  "address": "123 Main Street, Anytown",
+  "url": "https://samplebistro.com",
+  "type": "Casual",
+  "brandTone": "Friendly",
+  "todoFacts": [
+    "Currently running Summer Specials",
+    "Famous for seafood dishes",
+    "Live jazz music on weekends",
+    "Pet-friendly outdoor seating"
+  ]
+}
