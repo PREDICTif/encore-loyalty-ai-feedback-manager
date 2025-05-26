@@ -1,0 +1,113 @@
+Build a streamlined React-based interactive web app prototype:
+
+Overview:
+ Develop a React-based web application that simulates an AI-driven feedback response system for restaurants. The application should allow users to input and manage structured facts about the restaurant, customer, and system settings, and generate AI-crafted responses to customer feedback using OpenAI’s API. A minimal, elegant UI that demonstrates an AI-driven feedback response system for restaurants.
+
+Technology Stack:
+ • React frontend (TailwindCSS for styling).
+ • JSON for fact management.
+ • OpenAI API for response generation.
+
+⸻
+
+UI Layout (single page app):
+
+Header:
+ • “Encore Loyalty AI Feedback Manager” centered, prominent.
+
+Main Section (grid or flex layout, clear separation):
+
+Facts Input/Editor (left half):
+ • 3 clearly labeled and visually distinct collapsible sections or tabs:
+
+1. Restaurant Specific Facts:
+   • Editable fields (prepopulate from JSON):
+   • Name, Address, URL
+   • Restaurant Type (dropdown: Casual, Upscale, Fast-food, Fine dining, etc.)
+   • Brand tone (dropdown: Formal, Casual, Friendly, Professional)
+   • Editable “to-do” style list of facts (users can dynamically add/remove items)
+2. Customer Specific Facts:
+   • Editable fields (prepopulate from JSON):
+   • Name
+   • Gender (M, F, Unknown)
+   • Customer History (dropdown: Long-time, Recent, Unknown, Free entry)
+   • Meal type (dropdown: Breakfast, Lunch, Dinner, Unknown, Free-form)
+   • Editable “to-do” style list for additional custom facts (users dynamically add/remove)
+   • Image upload (optional), User can upload a screenshot of the customer feedback taken from the app.
+3. System Facts & Settings:
+   • Editable fields (prepopulate from JSON):
+   • System prompt template (editable textarea)
+   • Default Response Length (short, medium, detailed)
+   • Toggle options (checkboxes):
+   • Include Apology if feedback negative
+   • Include marketing message if feedback positive
+   • Enable multiple response variations (disabled initially, for future)
+
+   Users will have the ability to generate or regenerate the response, which is what shows in the right half of the screen.
+
+AI Response Generation (right half):
+ • Large Text Area labeled clearly: “Customer Feedback Screenshot/Extracted Text”.
+ • Prepopulated with realistic examples.
+ • “Generate AI Response” button beneath textarea.
+ • Display box below button (bordered, shadowed) clearly showing AI-generated response.
+ • Ability to save the response to a file or send email to the customer.
+
+⸻
+
+Backend Logic (simple):
+ • Load/save all facts to structured JSON files.
+ • Call OpenAI GPT (use GPT-4 or GPT-3.5 initially) to generate the response based on facts & feedback input.
+ • JSON structure clearly matches UI sections.
+
+Initial AI Prompt Template (customizable in System Facts):
+
+You are a customer relationship manager for a restaurant named "{Restaurant Name}", located at "{Address}".
+The restaurant type is "{Restaurant Type}" and communicates with a "{Brand tone}" tone.
+
+A customer named "{Customer Name}" ({Gender}), a "{Customer History}" customer, recently had "{Meal type}" and left feedback: "{Customer Feedback Text}".
+
+Consider the following additional restaurant facts: {Restaurant Todo List Facts}
+
+Consider the following additional customer facts: {Customer Todo List Facts}
+
+Generate a thoughtful, concise response addressing the customer's feedback appropriately. If feedback is negative, consider a polite apology. If positive, consider a friendly marketing message inviting them back.
+
+Replace placeholders with actual fact data during API call.
+
+⸻
+
+Initial JSON Example (facts.json). This might be enriched with more facts and data from the restaurant and customer later:
+
+{
+  "restaurant_facts": {
+    "name": "Sample Bistro",
+    "address": "123 Main Street, Anytown",
+    "url": "[https://samplebistro.com](https://samplebistro.com)",
+    "type": "Casual",
+    "brand_tone": "Friendly",
+    "todo_facts": ["Currently running Summer Specials", "Famous for seafood dishes"]
+  },
+  "customer_facts": {
+    "name": "John Doe",
+    "gender": "M",
+    "history": "Long-time",
+    "meal": "Dinner",
+    "todo_facts": ["Prefers window seating", "Usually orders vegetarian dishes"]
+  },
+  "system_facts": {
+    "prompt_template": "Default template from above",
+    "response_length": "medium",
+    "include_apology": true,
+    "include_marketing": true,
+    "multiple_responses": false
+  }
+}
+
+⸻
+
+Interaction Flow:
+ • User edits facts or adds new ones dynamically.
+ • User edits or pastes customer feedback.
+ • User clicks “Generate AI Response.”
+ • Response appears clearly below, generated via OpenAI API.
+
