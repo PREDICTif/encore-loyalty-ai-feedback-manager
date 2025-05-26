@@ -22,29 +22,33 @@ A React-based AI-powered feedback response system for restaurants that generates
 ## Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd encore-loyalty-ai
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
    Create a `.env` file in the root directory:
+
    ```env
    OPENAI_API_KEY=your_openai_api_key_here
    ```
 
 4. **Start the development server**
+
    ```bash
    npm run dev
    ```
 
 5. **Access the application**
-   Open your browser and navigate to `http://localhost:5000`
+   Open your browser and navigate to `http://localhost:6000`
 
 ## Project Structure
 
@@ -70,17 +74,20 @@ A React-based AI-powered feedback response system for restaurants that generates
 ## Usage
 
 ### Profile Management
+
 1. Use the **Profile Manager** to select different restaurant and customer combinations
 2. Choose from pre-built profiles or customize your own
 3. Each restaurant type has specific customer profiles tailored to that dining experience
 
 ### Generating AI Responses
+
 1. Enter or upload customer feedback in the text area
 2. Optionally upload a screenshot for automatic text extraction
 3. Click "Generate AI Response" to create a personalized response
 4. Save or email the response to the customer
 
 ### Restaurant Profiles Included
+
 - **Sample Bistro**: Casual dining with seafood specialties
 - **Le Jardin Noir**: Fine dining, Michelin-starred restaurant
 - **Quick Bites Express**: Fast-food with 24/7 service
