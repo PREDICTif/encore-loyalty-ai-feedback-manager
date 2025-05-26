@@ -10,8 +10,16 @@ import path from "path";
 const upload = multer({ storage: multer.memoryStorage() });
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+const openaiApiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_ENV_VAR;
+
+if (!openaiApiKey || openaiApiKey === "default_key") {
+  console.warn("⚠️  WARNING: No valid OpenAI API key found!");
+  console.warn("   Please set the OPENAI_API_KEY environment variable.");
+  console.warn("   You can do this by running: export OPENAI_API_KEY=your_api_key_here");
+}
+
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_ENV_VAR || "default_key",
+  apiKey: openaiApiKey || "dummy_key_for_development",
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -45,13 +53,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/generate-response", async (req, res) => {
     try {
       const { feedbackText, configurationId } = req.body;
-      
+
       if (!feedbackText) {
         return res.status(400).json({ message: "Feedback text is required" });
       }
 
       // Get the configuration
-      const config = configurationId 
+      const config = configurationId
         ? await storage.getFactConfiguration(configurationId)
         : await storage.getLatestFactConfiguration();
 
@@ -61,7 +69,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Build the prompt with actual data
       let prompt = config.systemFacts.promptTemplate;
-      
+
       // Replace placeholders with actual values
       prompt = prompt
         .replace(/\{Restaurant Name\}/g, config.restaurantFacts.name)
@@ -85,6 +93,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       prompt += `\n\n${lengthGuidance[config.systemFacts.responseLength] || lengthGuidance.medium}`;
 
+      // Check if we have a valid API key before making the call
+      if (!openaiApiKey || openaiApiKey === "dummy_key_for_development") {
+        return res.status(500).json({
+          message: "OpenAI API key not configured. Please set the OPENAI_API_KEY environment variable.",
+          error: "Missing API key"
+        });
+      }
+
       // Call OpenAI API
       const completion = await openai.chat.completions.create({
         model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024
@@ -98,8 +114,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             content: prompt
           }
         ],
-        max_tokens: config.systemFacts.responseLength === "detailed" ? 1000 : 
-                   config.systemFacts.responseLength === "short" ? 200 : 500,
+        max_tokens: config.systemFacts.responseLength === "detailed" ? 1000 :
+          config.systemFacts.responseLength === "short" ? 200 : 500,
         temperature: 0.7,
       });
 
@@ -118,15 +134,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Calculate response analytics
       const wordCount = aiResponse.split(/\s+/).length;
-      const sentiment = feedbackText.toLowerCase().includes('great') || 
-                       feedbackText.toLowerCase().includes('excellent') || 
-                       feedbackText.toLowerCase().includes('amazing') ||
-                       feedbackText.toLowerCase().includes('wonderful') ||
-                       feedbackText.toLowerCase().includes('outstanding') ? 'Positive' : 
-                       feedbackText.toLowerCase().includes('bad') || 
-                       feedbackText.toLowerCase().includes('terrible') ||
-                       feedbackText.toLowerCase().includes('awful') ||
-                       feedbackText.toLowerCase().includes('horrible') ? 'Negative' : 'Neutral';
+      const sentiment = feedbackText.toLowerCase().includes('great') ||
+        feedbackText.toLowerCase().includes('excellent') ||
+        feedbackText.toLowerCase().includes('amazing') ||
+        feedbackText.toLowerCase().includes('wonderful') ||
+        feedbackText.toLowerCase().includes('outstanding') ? 'Positive' :
+        feedbackText.toLowerCase().includes('bad') ||
+          feedbackText.toLowerCase().includes('terrible') ||
+          feedbackText.toLowerCase().includes('awful') ||
+          feedbackText.toLowerCase().includes('horrible') ? 'Negative' : 'Neutral';
 
       res.json({
         ...savedResponse,
@@ -138,9 +154,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     } catch (error) {
       console.error("Error generating AI response:", error);
-      res.status(500).json({ 
-        message: "Failed to generate AI response", 
-        error: error.message 
+      res.status(500).json({
+        message: "Failed to generate AI response",
+        error: error.message
       });
     }
   });
@@ -182,9 +198,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     } catch (error) {
       console.error("Error analyzing image:", error);
-      res.status(500).json({ 
-        message: "Failed to analyze image", 
-        error: error.message 
+      res.status(500).json({
+        message: "Failed to analyze image",
+        error: error.message
       });
     }
   });
@@ -193,7 +209,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/save-response", async (req, res) => {
     try {
       const { responseId } = req.body;
-      
+
       const response = await storage.getFeedbackResponse(responseId);
       if (!response) {
         return res.status(404).json({ message: "Response not found" });
@@ -213,7 +229,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/email-response", async (req, res) => {
     try {
       const { responseId, customerEmail } = req.body;
-      
+
       const response = await storage.getFeedbackResponse(responseId);
       if (!response) {
         return res.status(404).json({ message: "Response not found" });
@@ -222,7 +238,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // In a real implementation, you would integrate with an email service
       // For now, just simulate success
       console.log(`Would send email to ${customerEmail} with response: ${response.aiResponse}`);
-      
+
       res.json({ message: "Email sent successfully" });
 
     } catch (error) {
@@ -237,7 +253,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const profilesDir = path.join(process.cwd(), 'data', 'restaurant-profiles');
       const files = await fs.readdir(profilesDir);
       const profiles = [];
-      
+
       for (const file of files) {
         if (file.endsWith('.json')) {
           const data = await fs.readFile(path.join(profilesDir, file), 'utf-8');
@@ -250,7 +266,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
         }
       }
-      
+
       res.json(profiles);
     } catch (error) {
       console.error("Error loading restaurant profiles:", error);
@@ -263,11 +279,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { restaurantId } = req.params;
       const profilesDir = path.join(process.cwd(), 'data', 'customer-profiles', restaurantId);
-      
+
       try {
         const files = await fs.readdir(profilesDir);
         const profiles = [];
-        
+
         for (const file of files) {
           if (file.endsWith('.json')) {
             const data = await fs.readFile(path.join(profilesDir, file), 'utf-8');
@@ -278,7 +294,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             });
           }
         }
-        
+
         res.json(profiles);
       } catch (dirError) {
         // Directory doesn't exist, return empty array
@@ -295,10 +311,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { profileId } = req.body;
       const profilePath = path.join(process.cwd(), 'data', 'restaurant-profiles', `${profileId}.json`);
-      
+
       const data = await fs.readFile(profilePath, 'utf-8');
       const restaurantProfile = JSON.parse(data);
-      
+
       res.json(restaurantProfile);
     } catch (error) {
       console.error("Error loading restaurant profile:", error);
@@ -311,10 +327,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { restaurantId, profileId } = req.body;
       const profilePath = path.join(process.cwd(), 'data', 'customer-profiles', restaurantId, `${profileId}.json`);
-      
+
       const data = await fs.readFile(profilePath, 'utf-8');
       const customerProfile = JSON.parse(data);
-      
+
       res.json(customerProfile);
     } catch (error) {
       console.error("Error loading customer profile:", error);
