@@ -590,17 +590,17 @@ export default function FactsEditor({
                   <Plus size={16} className="mr-1" />
                   Add Customer Fact
                 </Button>
+
+                {/* Screenshot Upload */}
+                <div className="mt-6 pt-4 border-t border-slate-200">
+                  <ScreenshotUpload
+                    configuration={configuration}
+                    onFactsExtracted={handleFactsExtracted}
+                  />
+                </div>
               </div>
             </CollapsibleContent>
           </Collapsible>
-        </div>
-
-        {/* Screenshot Upload */}
-        <div className="mb-6">
-          <ScreenshotUpload
-            configuration={configuration}
-            onFactsExtracted={handleFactsExtracted}
-          />
         </div>
 
         {/* System Facts Section */}
