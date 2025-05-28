@@ -516,45 +516,6 @@ export default function FactsEditor({
                 </Select>
               </div>
 
-              {/* Customer Feedback Input */}
-              <div className="mt-4">
-                <Label className="text-sm font-medium text-slate-700 mb-2">
-                  Customer Feedback Screenshot/Extracted Text
-                </Label>
-                <Textarea
-                  placeholder="Paste customer feedback text here or upload screenshot below..."
-                  className="h-32 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-4"
-                />
-
-                {/* File Upload Area */}
-                <Label className="text-sm font-medium text-slate-700 mb-2">
-                  Customer Feedback Screenshot (Optional)
-                </Label>
-                <div className="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors mb-4">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    id="customer-file-upload"
-                  />
-                  <label
-                    htmlFor="customer-file-upload"
-                    className="cursor-pointer"
-                  >
-                    <Upload
-                      className="mx-auto text-2xl text-slate-400 mb-2"
-                      size={32}
-                    />
-                    <p className="text-sm text-slate-600">
-                      Click to upload or drag and drop
-                    </p>
-                    <p className="text-xs text-slate-400">
-                      PNG, JPG up to 10MB
-                    </p>
-                  </label>
-                </div>
-              </div>
-
               {/* Dynamic Customer Facts */}
               <div className="mt-4">
                 <Label className="text-sm font-medium text-slate-700 mb-2">
