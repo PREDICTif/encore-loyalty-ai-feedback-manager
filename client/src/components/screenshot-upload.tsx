@@ -107,11 +107,9 @@ export default function ScreenshotUpload({
         (fact) => `${fact.category}: ${fact.value}`
       );
 
-      onFactsExtracted(factStrings);
-
       toast({
         title: "Facts Extracted Successfully",
-        description: `Extracted ${facts.length} facts from the screenshot.`,
+        description: `Extracted ${facts.length} facts from the screenshot. Click "Add Facts to Customer Profile" to add them.`,
       });
     } catch (error) {
       console.error("Error processing image:", error);
