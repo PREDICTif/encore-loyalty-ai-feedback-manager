@@ -205,6 +205,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Analyze feedback screenshot and extract facts
+  app.post("/api/analyze-feedback-screenshot", upload.single('image'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No image file provided" });
+      }
+
+      const base64Image = req.file.buffer.toString('base64');
+
+      const visionResponse = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: `You are an expert at analyzing customer feedback screenshots from restaurant review systems.
+Extract all factual information about the customer and their experience. Look for:
+- Service ratings (e.g., "Service: 1/5 stars" or "Service rated 1 star")
+- Food quality ratings
+- Value/price ratings
+- Overall ratings
+- Customer demographics (age, gender, marital status)
+- Visit frequency
+- Time of visit (lunch, dinner, etc.)
+- Party size
+- How they found the restaurant
+- Likelihood to recommend
+- Any specific complaints or compliments
+- Server information
+- Location information
+- Contact information (if visible)
+
+Return a JSON array of extracted facts. Each fact should have:
+- category: The type of information (e.g., "Service Rating", "Age", "Visit Frequency")
+- value: The actual value (e.g., "1/5 stars", "46-55", "10+ times per year")
+- confidence: "high", "medium", or "low" based on how clear the information is
+
+Be very thorough and extract ALL visible information from the feedback form.`
+          },
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: "Analyze this customer feedback screenshot and extract all facts about the customer and their experience. Return only a JSON array of facts."
+              },
+              {
+                type: "image_url",
+                image_url: {
+                  url: `data:image/jpeg;base64,${base64Image}`
+                }
+              }
+            ],
+          },
+        ],
+        max_tokens: 1000,
+        temperature: 0.3, // Lower temperature for more consistent extraction
+      });
+
+      const responseText = visionResponse.choices[0].message.content || "";
+
+      // Try to parse the JSON response
+      let extractedFacts = [];
+      try {
+        // Extract JSON from the response (in case there's extra text)
+        const jsonMatch = responseText.match(/\[[\s\S]*\]/);
+        if (jsonMatch) {
+          extractedFacts = JSON.parse(jsonMatch[0]);
+        } else {
+          throw new Error("No JSON array found in response");
+        }
+      } catch (parseError) {
+        console.error("Error parsing facts JSON:", parseError);
+        // Fallback: try to extract some basic facts from the text
+        extractedFacts = [{
+          category: "Raw Feedback",
+          value: responseText.substring(0, 200),
+          confidence: "low"
+        }];
+      }
+
+      res.json({ extractedFacts });
+
+    } catch (error) {
+      console.error("Error analyzing feedback screenshot:", error);
+      res.status(500).json({
+        message: "Failed to analyze feedback screenshot",
+        error: error.message
+      });
+    }
+  });
+
   // Save response to file
   app.post("/api/save-response", async (req, res) => {
     try {

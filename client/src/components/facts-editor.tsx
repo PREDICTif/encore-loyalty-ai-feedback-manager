@@ -30,6 +30,7 @@ import {
   Save,
 } from "lucide-react";
 import { FactConfiguration } from "@/lib/types";
+import ScreenshotUpload from "@/components/screenshot-upload";
 
 interface FactsEditorProps {
   configuration: FactConfiguration;
@@ -60,7 +61,7 @@ export default function FactsEditor({
   const [openSections, setOpenSections] = useState({
     restaurant: true,
     customer: true,
-    system: true,
+    system: false,
   });
 
   // Local state for text inputs to prevent aggressive callbacks
@@ -172,6 +173,25 @@ export default function FactsEditor({
     setEditingCustomerFact(null);
   };
 
+  const handleFactsExtracted = (facts: string[]) => {
+    // Add extracted facts to customer facts
+    const currentFacts = configuration.customerFacts.todoFacts || [];
+    const newFacts = [...currentFacts, ...facts];
+    const updatedCustomerFacts = {
+      ...configuration.customerFacts,
+      todoFacts: newFacts,
+    };
+
+    // Update local state
+    setLocalCustomerFacts(newFacts);
+
+    // Update configuration
+    onConfigurationChange({
+      ...configuration,
+      customerFacts: updatedCustomerFacts,
+    });
+  };
+
   // Auto-save on blur or Enter key
   const handleRestaurantFactKeyDown = (
     e: React.KeyboardEvent,
@@ -213,14 +233,14 @@ export default function FactsEditor({
             <CollapsibleTrigger asChild>
               <Button
                 variant="ghost"
-                className="w-full justify-between px-4 py-3 bg-slate-50 rounded-t-lg border border-slate-200 hover:bg-slate-100"
+                className="w-full justify-between px-4 py-3 bg-blue-600 text-white rounded-t-lg border border-blue-600 hover:bg-blue-700 transition-colors"
               >
-                <span className="font-medium text-slate-700 flex items-center">
-                  <Utensils className="text-blue-500 mr-2" size={16} />
+                <span className="font-medium flex items-center">
+                  <Utensils className="mr-2" size={16} />
                   Restaurant Specific Facts
                 </span>
                 <ChevronDown
-                  className={`text-slate-400 transition-transform ${
+                  className={`transition-transform ${
                     openSections.restaurant ? "rotate-180" : ""
                   }`}
                   size={16}
@@ -404,14 +424,14 @@ export default function FactsEditor({
             <CollapsibleTrigger asChild>
               <Button
                 variant="ghost"
-                className="w-full justify-between px-4 py-3 bg-slate-50 rounded-t-lg border border-slate-200 hover:bg-slate-100"
+                className="w-full justify-between px-4 py-3 bg-blue-600 text-white rounded-t-lg border border-blue-600 hover:bg-blue-700 transition-colors"
               >
-                <span className="font-medium text-slate-700 flex items-center">
-                  <User className="text-indigo-500 mr-2" size={16} />
+                <span className="font-medium flex items-center">
+                  <User className="mr-2" size={16} />
                   Customer Specific Facts
                 </span>
                 <ChevronDown
-                  className={`text-slate-400 transition-transform ${
+                  className={`transition-transform ${
                     openSections.customer ? "rotate-180" : ""
                   }`}
                   size={16}
@@ -496,45 +516,6 @@ export default function FactsEditor({
                 </Select>
               </div>
 
-              {/* Customer Feedback Input */}
-              <div className="mt-4">
-                <Label className="text-sm font-medium text-slate-700 mb-2">
-                  Customer Feedback Screenshot/Extracted Text
-                </Label>
-                <Textarea
-                  placeholder="Paste customer feedback text here or upload screenshot below..."
-                  className="h-32 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-4"
-                />
-
-                {/* File Upload Area */}
-                <Label className="text-sm font-medium text-slate-700 mb-2">
-                  Customer Feedback Screenshot (Optional)
-                </Label>
-                <div className="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors mb-4">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    id="customer-file-upload"
-                  />
-                  <label
-                    htmlFor="customer-file-upload"
-                    className="cursor-pointer"
-                  >
-                    <Upload
-                      className="mx-auto text-2xl text-slate-400 mb-2"
-                      size={32}
-                    />
-                    <p className="text-sm text-slate-600">
-                      Click to upload or drag and drop
-                    </p>
-                    <p className="text-xs text-slate-400">
-                      PNG, JPG up to 10MB
-                    </p>
-                  </label>
-                </div>
-              </div>
-
               {/* Dynamic Customer Facts */}
               <div className="mt-4">
                 <Label className="text-sm font-medium text-slate-700 mb-2">
@@ -609,6 +590,14 @@ export default function FactsEditor({
                   <Plus size={16} className="mr-1" />
                   Add Customer Fact
                 </Button>
+
+                {/* Screenshot Upload */}
+                <div className="mt-6 pt-4 border-t border-slate-200">
+                  <ScreenshotUpload
+                    configuration={configuration}
+                    onFactsExtracted={handleFactsExtracted}
+                  />
+                </div>
               </div>
             </CollapsibleContent>
           </Collapsible>
@@ -623,14 +612,14 @@ export default function FactsEditor({
             <CollapsibleTrigger asChild>
               <Button
                 variant="ghost"
-                className="w-full justify-between px-4 py-3 bg-slate-50 rounded-t-lg border border-slate-200 hover:bg-slate-100"
+                className="w-full justify-between px-4 py-3 bg-blue-600 text-white rounded-t-lg border border-blue-600 hover:bg-blue-700 transition-colors"
               >
-                <span className="font-medium text-slate-700 flex items-center">
-                  <Settings className="text-emerald-500 mr-2" size={16} />
+                <span className="font-medium flex items-center">
+                  <Settings className="mr-2" size={16} />
                   System Facts & Settings
                 </span>
                 <ChevronDown
-                  className={`text-slate-400 transition-transform ${
+                  className={`transition-transform ${
                     openSections.system ? "rotate-180" : ""
                   }`}
                   size={16}

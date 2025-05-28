@@ -59,10 +59,10 @@ export default function FeedbackManager() {
     if (
       configData &&
       !configuration &&
-      configData.id &&
-      configData.restaurantFacts &&
-      configData.customerFacts &&
-      configData.systemFacts
+      (configData as any).id &&
+      (configData as any).restaurantFacts &&
+      (configData as any).customerFacts &&
+      (configData as any).systemFacts
     ) {
       setConfiguration(configData as FactConfiguration);
     }
