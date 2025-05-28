@@ -83,6 +83,7 @@ Text generation uses carefully constructed prompts that incorporate all relevant
    cd encore-loyalty-ai-feedback-manager
    npm install
    ```
+
 2. **Environment Configuration**
    Create a `.env` file in the project root:
 
@@ -90,6 +91,7 @@ Text generation uses carefully constructed prompts that incorporate all relevant
    OPENAI_API_KEY=your_openai_api_key_here
    NODE_ENV=development
    ```
+
 3. **Development Server**
 
    ```bash
