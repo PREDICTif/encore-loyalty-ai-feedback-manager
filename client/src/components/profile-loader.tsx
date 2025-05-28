@@ -173,7 +173,7 @@ export default function ProfileLoader({
           </CardHeader>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 pt-8">
             {/* Restaurant Profile Loader */}
             <div className="space-y-3">
               <div className="flex items-center space-x-2">
