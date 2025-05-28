@@ -11,6 +11,41 @@ A React-based AI-powered feedback response system for restaurants that generates
 - **Customer Segmentation**: Different customer profiles with history and preferences
 - **Response Analytics**: Word count and sentiment analysis of generated responses
 
+## Customer Feedback Screenshot Feature
+
+The application now includes an advanced screenshot upload feature that automatically extracts detailed customer information from feedback forms and review screenshots.
+
+### How It Works
+
+1. **Drag and Drop or Click to Upload**: Simply drag a screenshot of a customer feedback form onto the designated area, or click to browse and select an image
+2. **Automatic Fact Extraction**: The AI analyzes the image and extracts all relevant information including:
+   - Service ratings (e.g., "Service: 1/5 stars")
+   - Food quality ratings
+   - Value/price ratings
+   - Customer demographics (age, gender, marital status)
+   - Visit frequency and timing
+   - How they found the restaurant
+   - Likelihood to recommend
+   - Specific complaints or compliments
+   - Server and location information
+
+3. **Confidence Levels**: Each extracted fact is labeled with a confidence level (high, medium, or low) based on how clearly the information appears in the image
+
+4. **Automatic Integration**: Extracted facts are automatically added to the customer's profile facts, enriching the context for AI response generation
+
+### Supported Information Types
+
+The screenshot analyzer can extract:
+
+- **Ratings**: Service, food quality, value, atmosphere, overall experience
+- **Demographics**: Age range, gender, marital status
+- **Visit Details**: Time of day, visit frequency, party size
+- **Feedback**: Written comments and specific complaints/compliments
+- **Contact Info**: Email, phone (if visible)
+- **Other**: How they found the restaurant, likelihood to recommend
+
+This feature significantly speeds up the process of capturing customer feedback data and ensures no important details are missed when crafting personalized responses.
+
 ## Technology Stack
 
 - **Frontend**: React, TypeScript, TailwindCSS, Shadcn/ui
@@ -99,6 +134,7 @@ A React-based AI-powered feedback response system for restaurants that generates
 - `POST /api/fact-configuration` - Update configuration
 - `POST /api/generate-response` - Generate AI response
 - `POST /api/analyze-image` - Extract text from uploaded images
+- `POST /api/analyze-feedback-screenshot` - Extract structured facts from feedback screenshots
 - `GET /api/restaurant-profiles` - Get available restaurant profiles
 - `GET /api/customer-profiles/:restaurantId` - Get customer profiles for restaurant
 - `POST /api/load-restaurant-profile` - Load specific restaurant profile

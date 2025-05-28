@@ -30,6 +30,7 @@ import {
   Save,
 } from "lucide-react";
 import { FactConfiguration } from "@/lib/types";
+import ScreenshotUpload from "@/components/screenshot-upload";
 
 interface FactsEditorProps {
   configuration: FactConfiguration;
@@ -170,6 +171,25 @@ export default function FactsEditor({
   const saveCustomerFact = (index: number) => {
     updateCustomerFacts({ todoFacts: localCustomerFacts });
     setEditingCustomerFact(null);
+  };
+
+  const handleFactsExtracted = (facts: string[]) => {
+    // Add extracted facts to customer facts
+    const currentFacts = configuration.customerFacts.todoFacts || [];
+    const newFacts = [...currentFacts, ...facts];
+    const updatedCustomerFacts = {
+      ...configuration.customerFacts,
+      todoFacts: newFacts,
+    };
+
+    // Update local state
+    setLocalCustomerFacts(newFacts);
+
+    // Update configuration
+    onConfigurationChange({
+      ...configuration,
+      customerFacts: updatedCustomerFacts,
+    });
   };
 
   // Auto-save on blur or Enter key
@@ -612,6 +632,14 @@ export default function FactsEditor({
               </div>
             </CollapsibleContent>
           </Collapsible>
+        </div>
+
+        {/* Screenshot Upload */}
+        <div className="mb-6">
+          <ScreenshotUpload
+            configuration={configuration}
+            onFactsExtracted={handleFactsExtracted}
+          />
         </div>
 
         {/* System Facts Section */}
